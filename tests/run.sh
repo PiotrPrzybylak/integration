@@ -19,7 +19,7 @@ echo "Detected Mender artifact branch: $MENDER_ARTIFACT_BRANCH"
 
 function modify_services_for_testing() {
     # Remove all published ports for testing
-    sed -e '/9000:9000/d' -e '/443:443/d' -e '/ports:/d' ../docker-compose.demo.yml > ../docker-compose.testing.yml
+     # sed -e '/9000:9000/d' -e '/443:443/d' ../docker-compose.demo.yml > ../docker-compose.testing.yml
     # disable download speed limits
     sed -e 's/DOWNLOAD_SPEED/#DOWNLOAD_SPEED/' -i ../docker-compose.testing.yml
     # whitelist *all* IPs/DNS names in the gateway (will be accessed via dynamically assigned IP in tests)
@@ -112,7 +112,7 @@ else
     fi
 
     if [[ $@ == **--runs3** ]]; then
-        py.test --maxfail=1 -s --tb=short --verbose --junitxml=results.xml --runs3 tests/amazon_s3/test_s3.py::TestBasicIntegrationWithS3::test_update_image_with_aws_s3
+        python2.7 -m pytest --maxfail=1 -s --tb=short --verbose --junitxml=results.xml --runs3 tests/amazon_s3/test_s3.py::TestBasicIntegrationWithS3::test_update_image_with_aws_s3
     else
         echo "AWS creds are present, but --runs3 flag not passed."
     fi
@@ -151,8 +151,8 @@ if [[ -n $SPECIFIC_INTEGRATION_TEST ]]; then
 fi
 
 if [ $# -eq 0 ]; then
-    py.test $XDIST_ARGS $MAX_FAIL_ARG -s --verbose --junitxml=results.xml $HTML_REPORT --runfast --runslow $UPGRADE_TEST_ARG $SPECIFIC_INTEGRATION_TEST_ARG tests/
+  python2.7 -m pytest  $XDIST_ARGS $MAX_FAIL_ARG -s --verbose --junitxml=results.xml $HTML_REPORT --runfast --runslow $UPGRADE_TEST_ARG $SPECIFIC_INTEGRATION_TEST_ARG tests/
     exit $?
 fi
 
-py.test $XDIST_ARGS $MAX_FAIL_ARG -s --verbose --junitxml=results.xml $HTML_REPORT "$@" tests/
+python2.7 -m pytest  $XDIST_ARGS $MAX_FAIL_ARG -s --verbose --junitxml=results.xml $HTML_REPORT "$@" tests/

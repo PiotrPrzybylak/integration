@@ -83,3 +83,5 @@ services:
         entrypoint: /srv/start_conductor.sh
         environment:
             - CONFIG_PROP=config.properties
+        ports:
+            - "8080:8080"
